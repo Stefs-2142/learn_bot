@@ -2,6 +2,8 @@ import settings
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
+
+#Расширенное логирование, с датой и временем.
 logging.basicConfig(filename='bot.log', level=logging.INFO,format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s - %(funcName)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',)
 
