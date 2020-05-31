@@ -1,5 +1,6 @@
 import settings
 import logging
+from emoji import emojize
 from random import randint, choice
 from glob import glob
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -12,15 +13,22 @@ logging.basicConfig(filename='bot.log', level=logging.INFO,format='%(asctime)s.%
 PROXY = {'proxy_url': settings.PROXY_URL,
     'urllib3_proxy_kwargs': {'username': settings.PROXY_USERNAME, 'password': settings.PROXY_PASSWORD}}
 
+def get_smile(user_data):
+    if 'emoji' not in user_data:
+        smile = choice(settings.USER_EMOJI)
+        return emojize(smile, use_aliases=True)
+    return user_data['emoji']  
+
 def greet_user(update, context):
     print('Вызван /start')
-    print(update)
-    update.message.reply_text('Hi user!')
+    context.user_data['emoji'] = get_smile(context.user_data)
+    update.message.reply_text(f"Hi user! {context.user_data['emoji']}")
 
 def talk_to_me(update, context):
     text = update.message.text
     print(text)
-    update.message.reply_text(text)
+    context.user_data['emoji'] = get_smile(context.user_data)
+    update.message.reply_text(f"{text} {context.user_data['emoji']}")
 
 def play_random_number(user_number):
     bot_number = randint(user_number-10, user_number+10)
