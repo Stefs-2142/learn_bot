@@ -2,7 +2,7 @@ import settings
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from handlers import greet_user, guess_number, send_cat_picture, users_coordinates, talk_to_me
+from handlers import greet_user, guess_number, send_cat_picture, users_coordinates, talk_to_me, check_user_photo
 
 
 
@@ -13,19 +13,12 @@ logging.basicConfig(filename='bot.log', level=logging.INFO,format='%(asctime)s.%
 PROXY = {'proxy_url': settings.PROXY_URL,
     'urllib3_proxy_kwargs': {'username': settings.PROXY_USERNAME, 'password': settings.PROXY_PASSWORD}}
 
-
-
-
 def talk_to_me(update, context):
     text = update.message.text
     print(text)
     context.user_data['emoji'] = get_smile(context.user_data)
     my_keyboard = ReplyKeyboardMarkup([['Прислать котика.']])
     update.message.reply_text(f"{text} {context.user_data['emoji']}", reply_markup=main_keyboard())
-
-
-
-
 
 def main():
     mybot = Updater(settings.API_KEY, use_context=True, request_kwargs=PROXY)
@@ -36,14 +29,13 @@ def main():
     dp.add_handler(CommandHandler('cat', send_cat_picture))
 
     dp.add_handler(MessageHandler(Filters.regex('^(Прислать котика)$'), send_cat_picture))
+    dp.add_handler(MessageHandler(Filters.photo, check_user_photo))
     dp.add_handler(MessageHandler(Filters.location, users_coordinates))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
-
 
     logging.info('Бот стартовал')
     mybot.start_polling()
     mybot.idle()
-
 
 if __name__ == "__main__":
     main()
