@@ -1,10 +1,8 @@
 from clarifai.rest import ClarifaiApp
 import settings
 from emoji import emojize
-from pprint import PrettyPrinter
 from random import randint, choice
 from telegram import ReplyKeyboardMarkup, KeyboardButton
-
 
 
 def get_smile(user_data):
@@ -12,6 +10,7 @@ def get_smile(user_data):
         smile = choice(settings.USER_EMOJI)
         return emojize(smile, use_aliases=True)
     return user_data['emoji']
+
 
 def play_random_number(user_number):
     bot_number = randint(user_number-10, user_number+10)
@@ -23,8 +22,12 @@ def play_random_number(user_number):
         message = f'Ты загадал {user_number}, я загадал {bot_number}, ты проиграл!'
     return message
 
+
 def main_keyboard():
-    return ReplyKeyboardMarkup([['Прислать котика', KeyboardButton("Мои координаты", request_location=True)]]) 
+    return ReplyKeyboardMarkup(
+        [['Прислать котика', KeyboardButton("Мои координаты", request_location=True), 'Прислать анкету']]
+        )
+
 
 def is_cat(file_name):
     app = ClarifaiApp(api_key=settings.API_KEY_CLARIFAI)
@@ -36,8 +39,3 @@ def is_cat(file_name):
             if concept['name'] == 'cat':
                 return True
     return False
-    
-        
-
-
-    

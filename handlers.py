@@ -1,9 +1,10 @@
 from random import choice
-import  os
+import os
 from glob import glob
 
-
 from utils import main_keyboard, get_smile, play_random_number, is_cat
+
+
 
 def greet_user(update, context):
     context.user_data['emoji'] = get_smile(context.user_data)
@@ -11,6 +12,7 @@ def greet_user(update, context):
         f'Здравствуй, пользователь {context.user_data["emoji"]}',
         reply_markup=main_keyboard()
     )
+
 
 def send_cat_picture(update, context):
     cat_photo_list = glob('images/cat*.jp*g')
@@ -23,16 +25,16 @@ def users_coordinates(update, context):
     coords = update.message.location
     update.message.reply_text(
         f"Вашии координаты {coords} {context.user_data['emoji']}!",
-        reply_markup = main_keyboard()
+        reply_markup=main_keyboard()
     )
 
 def talk_to_me(update, context):
     text = update.message.text
     print(text)
     context.user_data['emoji'] = get_smile(context.user_data)
-    my_keyboard = ReplyKeyboardMarkup([['Прислать котика.']])
     update.message.reply_text(f"{text} {context.user_data['emoji']}", reply_markup=main_keyboard())
- 
+
+
 def guess_number(update, context):
     print(context.args)
     if context.args:
@@ -45,6 +47,7 @@ def guess_number(update, context):
     else:
         message = 'Введите число.'
     update.message.reply_text(message, main_keyboard())
+
 
 def check_user_photo(update, context):
     update.message.reply_text("Обрабатываем фотографию.")
@@ -59,5 +62,3 @@ def check_user_photo(update, context):
     else:
         update.message.reply_text('Котик на фото не обнаружен :(')
         os.remove(file_name)
-    
-        
